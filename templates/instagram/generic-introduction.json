@@ -1,0 +1,10 @@
+{
+  "id": "instagram-generic-introduction",
+  "name": "Generic Introduction",
+  "platform": "instagram",
+  "stage": "initial_contact",
+  "prospectTypes": [
+    "*"
+  ],
+  "body": "Hello {greeting_name},\n\nAmit here.\n\nI'm a Full-Stack + AI developer. I build products and internal systems end-to-end.\n\nIs there any technical problem or product idea you wish someone would just take care of?\n\nIf yes, send it over — I'll tell you what I'd build."
+}

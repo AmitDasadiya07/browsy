@@ -1,0 +1,10 @@
+{
+  "id": "linkedin-follow-up-1",
+  "name": "LinkedIn Follow-up 1",
+  "platform": "linkedin",
+  "stage": "follow_up_1",
+  "prospectTypes": [
+    "*"
+  ],
+  "body": "Hi {first_name}, just checking in — happy to help if there's a technical/process problem worth solving."
+}

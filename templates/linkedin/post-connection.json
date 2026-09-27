@@ -1,0 +1,10 @@
+{
+  "id": "linkedin-post-connection",
+  "name": "Post Connection Message",
+  "platform": "linkedin",
+  "stage": "post_connection",
+  "prospectTypes": [
+    "*"
+  ],
+  "body": "Hi {first_name},\n\nThanks for connecting. I build full-stack + AI products end-to-end.\n\nIs there any technical problem or product idea at {company} that you wish someone would take care of?"
+}

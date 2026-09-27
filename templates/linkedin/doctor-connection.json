@@ -1,0 +1,12 @@
+{
+  "id": "linkedin-doctor-connection",
+  "name": "Doctor Connection Request",
+  "platform": "linkedin",
+  "stage": "connection_request",
+  "prospectTypes": [
+    "doctor",
+    "dermatologist",
+    "physician"
+  ],
+  "body": "Hi {first_name}, I work with healthcare teams on product and AI systems. Would be glad to connect."
+}

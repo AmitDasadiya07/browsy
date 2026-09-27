@@ -1,0 +1,10 @@
+{
+  "id": "linkedin-generic-connection",
+  "name": "Generic Connection",
+  "platform": "linkedin",
+  "stage": "connection_request",
+  "prospectTypes": [
+    "*"
+  ],
+  "body": "Hi {first_name}, would be glad to connect — I build full-stack and AI systems for teams."
+}

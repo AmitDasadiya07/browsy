@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Browsy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app">
+
+      <!-- ══════════════════ SIDEBAR ══════════════════ -->
+      <aside class="sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div>
+            <p class="brand">Browsy</p>
+            <p class="brand-sub">AI Outreach · v2</p>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <!-- Overview -->
+          <button class="nav-item active" data-view="overview">
+            <span class="nav-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+                <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+              </svg>
+            </span>
+            Overview
+          </button>
+
+          <!-- Instagram Agent -->
+          <div class="nav-group">
+            <button class="nav-group-trigger" data-group="instagram">
+              <span class="nav-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="2" y="2" width="20" height="20" rx="5"/>
+                  <circle cx="12" cy="12" r="4"/>
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+                </svg>
+              </span>
+              <span class="nav-group-label">Instagram Agent</span>
+              <span class="nav-chevron">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </button>
+            <div class="nav-group-children" id="ig-children">
+              <button class="nav-child" data-view="ig-dashboard">Dashboard</button>
+              <button class="nav-child" data-view="ig-leads">Lead Intelligence</button>
+              <button class="nav-child" data-view="ig-templates">Templates</button>
+              <button class="nav-child" data-view="ig-analytics">Analytics</button>
+              <button class="nav-child" data-view="ig-conversations">Conversations</button>
+            </div>
+          </div>
+
+          <!-- LinkedIn Agent -->
+          <div class="nav-group">
+            <button class="nav-group-trigger" data-group="linkedin">
+              <span class="nav-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="2" y="2" width="20" height="20" rx="4"/>
+                  <path d="M7 10v7M7 7v.5M11 17v-4c0-1.1.9-2 2-2s2 .9 2 2v4M11 10v7"/>
+                </svg>
+              </span>
+              <span class="nav-group-label">LinkedIn Agent</span>
+              <span class="nav-chevron">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </button>
+            <div class="nav-group-children" id="li-children">
+              <button class="nav-child" data-view="li-dashboard">Dashboard</button>
+              <button class="nav-child" data-view="li-campaign">Campaign</button>
+              <button class="nav-child" data-view="li-leads">Lead Intelligence</button>
+              <button class="nav-child" data-view="li-templates">Templates</button>
+              <button class="nav-child" data-view="li-analytics">Analytics</button>
+              <button class="nav-child" data-view="li-conversations">Conversations</button>
+            </div>
+          </div>
+        </nav>
+
+        <div class="sidebar-foot">
+          <div class="groq-status-pill" id="groqPill">
+            <span class="groq-dot" id="groqDot"></span>
+            <span id="groqLabel">Groq · —</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- ══════════════════ MAIN ══════════════════ -->
+      <main class="main">
+        <header class="topbar">
+          <div class="topbar-left">
+            <h1 id="viewTitle">Overview</h1>
+            <p class="topbar-sub" id="campaignLabel">—</p>
+          </div>
+          <div class="topbar-right">
+            <div class="ws-indicator" id="wsIndicator" title="Connection status">
+              <span class="ws-dot"></span>
+              <span class="ws-label">Live</span>
+            </div>
+          </div>
+        </header>
+
+        <!-- Global security banner -->
+        <div id="securityBanner" class="alert-banner alert-danger hidden" role="alert">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span id="securityBannerText"></span>
+        </div>
+
+        <!-- ── OVERVIEW ── -->
+        <section class="view active" id="view-overview">
+          <div class="kpi-row" id="leadSummaryCards"></div>
+          <div class="two-col">
+            <div class="platform-card ig-card">
+              <div class="platform-card-header">
+                <div class="platform-badge ig-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+                  Instagram
+                </div>
+                <span class="status-chip" id="igStatusChip">—</span>
+              </div>
+              <div id="igSnap" class="snap-list"></div>
+            </div>
+            <div class="platform-card li-card">
+              <div class="platform-card-header">
+                <div class="platform-badge li-badge">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M7 10v7M7 7v.5M11 17v-4c0-1.1.9-2 2-2s2 .9 2 2v4M11 10v7"/></svg>
+                  LinkedIn
+                </div>
+                <span class="status-chip" id="liStatusChip">—</span>
+              </div>
+              <div id="liSnap" class="snap-list"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Live Activity</span>
+              <span class="live-dot"></span>
+            </div>
+            <div id="log" class="activity-log"></div>
+          </div>
+        </section>
+
+        <!-- ── INSTAGRAM DASHBOARD ── -->
+        <section class="view" id="view-ig-dashboard">
+          <div class="session-card">
+            <div class="session-info">
+              <div class="session-avatar ig-avatar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+              </div>
+              <div>
+                <p class="session-title">Instagram Session</p>
+                <p class="session-status"><strong id="sessionStatus">—</strong></p>
+                <p class="session-meta"><span id="sessionUser">—</span> &middot; <span id="sessionSavedAt">—</span></p>
+                <p class="session-note" id="sessionNote">—</p>
+              </div>
+            </div>
+            <div class="session-actions">
+              <button class="btn btn-primary" id="btnIgLogin">Open Login</button>
+              <button class="btn btn-ghost" id="btnIgClose">Close Browser</button>
+              <button class="btn btn-ghost" id="btnIgReplace">Replace</button>
+              <button class="btn btn-danger-ghost" id="btnIgClear">Clear</button>
+            </div>
+          </div>
+
+          <div class="agent-controls">
+            <button class="btn btn-primary btn-lg" id="btnIgStart">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z"/></svg>
+              Start Instagram
+            </button>
+            <button class="btn btn-danger" id="btnIgStop">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+              Stop
+            </button>
+          </div>
+
+          <!-- ── Search Query Manager ── -->
+          <div class="panel query-manager-panel">
+            <div class="panel-header">
+              <span class="panel-title">Search Queries</span>
+              <div style="display:flex;gap:8px;align-items:center">
+                <span class="query-round-badge" id="igQueryRoundBadge">Round —</span>
+                <button class="btn btn-ghost btn-sm" id="btnIgLoadQueries">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                  Refresh
+                </button>
+              </div>
+            </div>
+            <p class="panel-desc">Enter your keywords (comma-separated or one per line). The agent will search them one by one.</p>
+            <div class="query-input-row">
+              <textarea class="form-input" id="igQueryInput" placeholder="Telehealth&#10;Telemedicine&#10;HealthTech..." rows="4"></textarea>
+              <button class="btn btn-primary" id="btnIgSaveQueries">Save Queries</button>
+            </div>
+            <div class="query-preview-grid" id="igQueryPreview"></div>
+          </div>
+
+          <div class="kpi-row" id="igStats"></div>
+
+          <div class="panel">
+            <div class="panel-header"><span class="panel-title">Current Lead Insight</span></div>
+            <div class="ai-insight-grid" id="igInsight"></div>
+            <div class="message-preview">
+              <p class="message-preview-label">Generated Message</p>
+              <pre id="aiMessage" class="message-pre">—</pre>
+            </div>
+          </div>
+
+          <div id="confirmPanel" class="confirm-card hidden">
+            <div class="confirm-card-header">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.22 1.2 2 2 0 012.22 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+              Message Confirmation
+              <span class="auto-approve-countdown" id="igAutoCountdown"></span>
+            </div>
+            <p class="confirm-meta" id="confirmMeta"></p>
+            <pre class="confirm-message" id="confirmMessage"></pre>
+            <div class="confirm-actions">
+              <button class="btn btn-primary" id="btnApprove">Approve &amp; Send</button>
+              <button class="btn btn-ghost" id="btnReject">Reject</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header"><span class="panel-title">Recent Records</span></div>
+            <div id="igRecords" class="records-list"></div>
+          </div>
+        </section>
+
+        <!-- ── INSTAGRAM LEADS ── -->
+        <section class="view" id="view-ig-leads">
+          <div class="filter-bar">
+            <select class="filter-select" id="filterPlatform">
+              <option value="instagram">Instagram</option>
+              <option value="all">All platforms</option>
+              <option value="linkedin">LinkedIn</option>
+            </select>
+            <select class="filter-select" id="filterPriority">
+              <option value="">All priorities</option>
+              <option value="A">A — High</option>
+              <option value="B">B — Good</option>
+              <option value="C">C — Low</option>
+              <option value="D">D — Skip</option>
+            </select>
+            <input class="filter-input" id="filterMinScore" type="number" placeholder="Min score" min="0" max="100" />
+            <input class="filter-input" id="filterProspectType" placeholder="Prospect type" />
+            <select class="filter-select" id="filterStatus">
+              <option value="">All statuses</option>
+              <option value="NEW">New</option>
+              <option value="CONTACTED">Contacted</option>
+              <option value="REPLIED">Replied</option>
+              <option value="INTERESTED">Interested</option>
+              <option value="QUESTION">Question</option>
+              <option value="NOT_INTERESTED">Not interested</option>
+              <option value="CLOSED">Closed</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" id="btnReloadLeads">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+              Refresh
+            </button>
+          </div>
+          <div class="leads-layout">
+            <div class="panel leads-panel">
+              <div class="panel-header"><span class="panel-title">Prospects</span></div>
+              <div id="leadsTable" class="leads-list"></div>
+            </div>
+            <div class="panel lead-detail-panel" id="leadDetail">
+              <div class="panel-header"><span class="panel-title">Prospect Detail</span></div>
+              <p class="empty-state">Select a prospect to view details</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── INSTAGRAM TEMPLATES ── -->
+        <section class="view" id="view-ig-templates">
+          <div class="filter-bar">
+            <select class="filter-select" id="templatePlatform">
+              <option value="instagram">Instagram</option>
+              <option value="">All</option>
+              <option value="linkedin">LinkedIn</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" id="btnReloadTemplates">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+              Refresh
+            </button>
+          </div>
+          <div class="two-col">
+            <div class="panel">
+              <div class="panel-header"><span class="panel-title">Template Library</span></div>
+              <div id="templatesList" class="templates-list"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><span class="panel-title">Preview</span></div>
+              <pre id="templatePreview" class="template-preview">None selected — agent auto-picks by prospect type.</pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── INSTAGRAM ANALYTICS ── -->
+        <section class="view" id="view-ig-analytics">
+          <div class="filter-bar">
+            <select class="filter-select" id="analyticsPlatform">
+              <option value="instagram">Instagram</option>
+              <option value="all">All Platforms</option>
+              <option value="linkedin">LinkedIn</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" id="btnReloadAnalytics">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+              Refresh
+            </button>
+          </div>
+          <div class="analytics-grid" id="analyticsPanels"></div>
+        </section>
+
+        <!-- ── INSTAGRAM CONVERSATIONS ── -->
+        <section class="view" id="view-ig-conversations">
+          <div class="two-col">
+            <div class="panel">
+              <div class="panel-header"><span class="panel-title">Analyze Reply</span></div>
+              <p class="panel-desc">Paste a visible reply for a saved prospect. AI never invents prices or prior conversations.</p>
+              <div class="form-stack">
+                <input class="form-input" id="convProspectId" placeholder="Prospect ID" />
+                <textarea class="form-textarea" id="convText" rows="5" placeholder="Paste conversation / reply text…"></textarea>
+                <button class="btn btn-primary" id="btnAnalyzeConv">Analyze Reply</button>
+              </div>
+              <div class="insight-chips" id="convMeta"></div>
+              <pre id="convResult" class="message-pre" style="margin-top:10px">—</pre>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><span class="panel-title">Suggested Reply</span></div>
+              <p class="panel-desc">Approve stores the reply. Auto-send is off by default.</p>
+              <textarea class="form-textarea" id="convSuggested" rows="9" placeholder="Suggested reply appears here…"></textarea>
+              <div class="confirm-actions" style="margin-top:10px">
+                <button class="btn btn-primary" id="btnApproveReply">Approve</button>
+                <button class="btn btn-ghost" id="btnEditReply">Edit &amp; Save</button>
+                <button class="btn btn-danger-ghost" id="btnSkipReply">Skip</button>
+              </div>
+              <p class="form-note" id="convDecisionNote">—</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── LINKEDIN DASHBOARD ── -->
+        <section class="view" id="view-li-dashboard">
+          <div id="liSecurityBanner" class="alert-banner alert-danger hidden" role="alert">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span id="liSecurityBannerText">LinkedIn security check detected — please resolve manually.</span>
+          </div>
+
+          <div class="session-card">
+            <div class="session-info">
+              <div class="session-avatar li-avatar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="4"/><path d="M7 10v7M7 7v.5M11 17v-4c0-1.1.9-2 2-2s2 .9 2 2v4M11 10v7"/></svg>
+              </div>
+              <div>
+                <p class="session-title">LinkedIn Session</p>
+                <p class="session-status"><strong id="liSessionStatus">—</strong></p>
+                <p class="session-note" id="liSessionNote">—</p>
+              </div>
+            </div>
+            <div class="session-actions">
+              <button class="btn btn-primary" id="btnLiLogin">Open Login</button>
+              <button class="btn btn-ghost" id="btnLiClose">Close Browser</button>
+              <button class="btn btn-danger-ghost" id="btnLiClear">Clear</button>
+            </div>
+          </div>
+
+          <div class="agent-controls">
+            <button class="btn btn-primary btn-lg" id="btnLiStart">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z"/></svg>
+              Run LinkedIn Agent
+            </button>
+            <button class="btn btn-ghost" id="btnLiStartNew">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+              New Prospects
+            </button>
+            <button class="btn btn-ghost" id="btnLiStartPending">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+              Process Pending
+            </button>
+            <button class="btn btn-danger" id="btnLiStop">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+              Stop
+            </button>
+          </div>
+
+          <div class="kpi-row" id="liStats"></div>
+
+          <div class="limits-row">
+            <div class="limit-card">
+              <div class="limit-card-header">
+                <span class="limit-label">Connections</span>
+                <span class="limit-nums"><span id="liConnUsed">0</span> / <span id="liConnMax">20</span></span>
+              </div>
+              <div class="limit-track"><div class="limit-fill" id="liConnBar" style="width:0%"></div></div>
+              <p class="limit-note" id="liConnNote"></p>
+            </div>
+            <div class="limit-card">
+              <div class="limit-card-header">
+                <span class="limit-label">Messages</span>
+                <span class="limit-nums"><span id="liMsgUsed">0</span> / <span id="liMsgMax">20</span></span>
+              </div>
+              <div class="limit-track"><div class="limit-fill" id="liMsgBar" style="width:0%"></div></div>
+              <p class="limit-note" id="liMsgNote"></p>
+            </div>
+          </div>
+
+          <div id="liConfirmPanel" class="confirm-card hidden">
+            <div class="confirm-card-header">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.22 1.2 2 2 0 012.22 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/></svg>
+              Message Confirmation
+            </div>
+            <p class="confirm-meta" id="liConfirmMeta"></p>
+            <pre class="confirm-message" id="liConfirmMessage"></pre>
+            <div class="confirm-actions">
+              <button class="btn btn-primary" id="btnLiApprove">Send Message</button>
+              <button class="btn btn-ghost" id="btnLiReject">Skip</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Pending Connections</span>
+              <button class="btn btn-ghost btn-sm" id="btnLiReloadPending">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                Refresh
+              </button>
+            </div>
+            <div id="liPendingTable" class="pending-table"></div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <span class="panel-title">Activity Log</span>
+              <span class="live-dot"></span>
+            </div>
+            <div id="liActivityLog" class="activity-log"></div>
+          </div>
+        </section>
+
+        <!-- ── LINKEDIN CAMPAIGN ── -->
+        <section class="view" id="view-li-campaign">
+          <div class="kpi-row" id="liCampaignCards"></div>
+          <div class="two-col">
+            <div class="panel">
+              <div class="panel-header"><span class="panel-title">LinkedIn Snapshot</span></div>
+              <div id="liCampaignSnap" class="snap-list"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><span class="panel-title">Lead Summary</span></div>
+              <div id="liCampaignLeadSummary" class="snap-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── LINKEDIN LEADS ── -->
+        <section class="view" id="view-li-leads">
+          <div class="filter-bar">
+            <select class="filter-select" id="liFilterPlatform">
+              <option value="linkedin">LinkedIn</option>
+              <option value="all">All platforms</option>
+            </select>
+            <select class="filter-select" id="liFilterPriority">
+              <option value="">All priorities</option>
+              <option value="A">A — High</option>
+              <option value="B">B — Good</option>
+              <option value="C">C — Low</option>
+              <option value="D">D — Skip</option>
+            </select>
+            <input class="filter-input" id="liFilterMinScore" type="number" placeholder="Min score" min="0" max="100" />
+            <button class="btn btn-ghost btn-sm" id="btnLiReloadLeads">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+              Refresh
+            </button>
+          </div>
+          <div class="leads-layout">
+            <div class="panel leads-panel">
+              <div class="panel-header"><span class="panel-title">LinkedIn Prospects</span></div>
+              <div id="liLeadsTable" class="leads-list"></div>
+            </div>
+            <div class="panel lead-detail-panel" id="liLeadDetail">
+              <div class="panel-header"><span class="panel-title">Prospect Detail</span></div>
+              <p class="empty-state">Select a prospect to view details</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── LINKEDIN TEMPLATES ── -->
+        <section class="view" id="view-li-templates">
+          <div class="filter-bar">
+            <select class="filter-select" id="liTemplatePlatform">
+              <option value="linkedin">LinkedIn</option>
+              <option value="">All</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" id="btnLiReloadTemplates">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+              Refresh
+            </button>
+          </div>
+          <div class="two-col">
+            <div class="panel">
+              <div class="panel-header"><span class="panel-title">Template Library</span></div>
+              <div id="liTemplatesList" class="templates-list"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><span class="panel-title">Preview</span></div>
+              <pre id="liTemplatePreview" class="template-preview">None selected — agent auto-picks by prospect type.</pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── LINKEDIN ANALYTICS ── -->
+        <section class="view" id="view-li-analytics">
+          <div class="filter-bar">
+            <select class="filter-select" id="liAnalyticsPlatform">
+              <option value="linkedin">LinkedIn</option>
+              <option value="all">All Platforms</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" id="btnLiReloadAnalytics">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+              Refresh
+            </button>
+          </div>
+          <div class="analytics-grid" id="liAnalyticsPanels"></div>
+        </section>
+
+        <!-- ── LINKEDIN CONVERSATIONS ── -->
+        <section class="view" id="view-li-conversations">
+          <div class="two-col">
+            <div class="panel">
+              <div class="panel-header"><span class="panel-title">Analyze Reply</span></div>
+              <p class="panel-desc">Paste a visible LinkedIn reply for a saved prospect.</p>
+              <div class="form-stack">
+                <input class="form-input" id="liConvProspectId" placeholder="Prospect ID" />
+                <textarea class="form-textarea" id="liConvText" rows="5" placeholder="Paste conversation / reply text…"></textarea>
+                <button class="btn btn-primary" id="btnLiAnalyzeConv">Analyze Reply</button>
+              </div>
+              <div class="insight-chips" id="liConvMeta"></div>
+              <pre id="liConvResult" class="message-pre" style="margin-top:10px">—</pre>
+            </div>
+            <div class="panel">
+              <div class="panel-header"><span class="panel-title">Suggested Reply</span></div>
+              <p class="panel-desc">Approve stores the reply. Auto-send is off by default.</p>
+              <textarea class="form-textarea" id="liConvSuggested" rows="9" placeholder="Suggested reply appears here…"></textarea>
+              <div class="confirm-actions" style="margin-top:10px">
+                <button class="btn btn-primary" id="btnLiApproveReply">Approve</button>
+                <button class="btn btn-ghost" id="btnLiEditReply">Edit &amp; Save</button>
+                <button class="btn btn-danger-ghost" id="btnLiSkipReply">Skip</button>
+              </div>
+              <p class="form-note" id="liConvDecisionNote">—</p>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+    <script src="/app.js"></script>
+  </body>
+</html>

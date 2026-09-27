@@ -1,0 +1,12 @@
+{
+  "id": "instagram-clinic-introduction",
+  "name": "Clinic Introduction",
+  "platform": "instagram",
+  "stage": "initial_contact",
+  "prospectTypes": [
+    "clinic_owner",
+    "skin_clinic",
+    "clinic"
+  ],
+  "body": "Hello {greeting_name},\n\nAmit here — Full-Stack + AI developer.\n\nI help clinics build internal tools, booking flows, and AI assistants that remove repetitive work.\n\nIs there any operational or product problem on your side that you'd like someone to take ownership of?\n\nHappy to take a look if you share it."
+}

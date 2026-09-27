@@ -1,0 +1,12 @@
+{
+  "id": "linkedin-founder-connection",
+  "name": "Founder Connection",
+  "platform": "linkedin",
+  "stage": "connection_request",
+  "prospectTypes": [
+    "founder",
+    "owner",
+    "clinic_owner"
+  ],
+  "body": "Hi {first_name}, I help founders ship full-stack + AI systems end-to-end. Would love to connect."
+}

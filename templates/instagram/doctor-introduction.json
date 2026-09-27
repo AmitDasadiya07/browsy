@@ -1,0 +1,12 @@
+{
+  "id": "instagram-doctor-introduction",
+  "name": "Doctor Introduction",
+  "platform": "instagram",
+  "stage": "initial_contact",
+  "prospectTypes": [
+    "doctor",
+    "dermatologist",
+    "physician"
+  ],
+  "body": "Hello {greeting_name},\n\nAmit here.\n\nI'm a Full-Stack + AI developer. I build products and internal systems end-to-end — from idea → architecture → development → deployment.\n\nRather than pitching you a service, I wanted to ask one simple thing:\n\n-> Is there any technical problem, repetitive process, or product idea in your company that you wish someone would just take care of?\n\nIf yes, send it to me. I'll take a look and tell you what I'd build.\n\nWorth a shot. 🙂"
+}

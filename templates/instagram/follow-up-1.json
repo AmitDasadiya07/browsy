@@ -1,0 +1,10 @@
+{
+  "id": "instagram-follow-up-1",
+  "name": "Instagram Follow-up 1",
+  "platform": "instagram",
+  "stage": "follow_up_1",
+  "prospectTypes": [
+    "*"
+  ],
+  "body": "Hi {greeting_name},\n\nJust floating this back up in case it got buried — happy to look at any technical/process problem if useful."
+}
