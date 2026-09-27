@@ -31,7 +31,11 @@ export class ProspectStore {
 
   constructor(filePath = './data/prospects.json') {
     this.filePath = path.resolve(filePath);
-    fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
+    try {
+      fs.mkdirSync(path.dirname(this.filePath), { recursive: true });
+    } catch (err) {
+      // Ignore read-only errors on serverless environments
+    }
     this.data = this.load();
   }
 
@@ -52,7 +56,11 @@ export class ProspectStore {
   }
 
   private save(): void {
-    fs.writeFileSync(this.filePath, JSON.stringify(this.data, null, 2), 'utf8');
+    try {
+      fs.writeFileSync(this.filePath, JSON.stringify(this.data, null, 2), 'utf8');
+    } catch (err) {
+      // Ignore read-only errors on serverless environments
+    }
   }
 
   private key(platform: Platform, profileUrl: string): string {
